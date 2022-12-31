@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: backend
+spec:
+    selector:
+        app: web-app
+    ports:
+        - protocol: 'TCP'
+          name: http
+          port: 80
+          targetPort: 8080
+        - protocol: 'TCP'
+          name: https
+          port: 443
+          targetPort: 443
+
+    type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: web-app
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: web-app
+            tier: backend
+        # matchExpression:
+        #     - { key: app, operator: In, values: [web-app, mobile-app] }
+    template:
+        metadata:
+            labels:
+                app: web-app
+                tier: backend
+        spec:
+            containers:
+                - name: node-app
+                  image: codyle212/web-app
+                  imagePullPolicy: Always
+                  livenessProbe:
+                      httpGet:
+                          path: /
+                          port: 8080
+                      periodSeconds: 5

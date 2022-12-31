@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: web-app
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: web-app
+            tier: backend
+    template:
+        metadata:
+            labels:
+                app: web-app
+                tier: backend
+        spec:
+            containers:
+                - name: node-app
+                  image: codyle212/web-app:1

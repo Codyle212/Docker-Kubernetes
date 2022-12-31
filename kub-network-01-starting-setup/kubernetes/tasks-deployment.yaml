@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: tasks-deployment
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: tasks
+    template:
+        metadata:
+            labels:
+                app: tasks
+        containers:
+            - name: tasks
+              image: codyle212/demo-tasks:latest
+              imagePullPolicy: Always
+              env:
+                  - name: AUTH_ADDRESS
+                    value: 'auth-service.default'
+                  - name: TASKS_FOLDER
+                    value: tasks
